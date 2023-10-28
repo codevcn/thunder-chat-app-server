@@ -1,6 +1,7 @@
 export enum Routes {
     AUTH = 'auth',
     USER = 'user',
+    CONVERSATIONS = 'conversations',
 }
 
 export enum Names {

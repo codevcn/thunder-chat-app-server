@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, UseGuards, Req } from '@nestjs/common'
+import { Controller, Post, Body, Res, UseGuards } from '@nestjs/common'
 import { Routes } from 'src/utils/constants'
 import { LoginUserDto } from 'src/dtos/auth'
 import { CreateUserDto } from 'src/dtos/user'
@@ -6,7 +6,8 @@ import { AuthService } from 'src/services/auth.service'
 import { Response } from 'express'
 import { removeJWTByCookie, sendJWTByCookie } from 'src/utils/jwt'
 import { AuthGuard } from 'src/guards/auth.guard'
-import { TRequestWithUser } from 'src/utils/types'
+import { TUser } from 'src/utils/types'
+import { User } from 'src/decorators/user.decorator'
 
 @Controller(Routes.AUTH)
 export class AuthController {
@@ -45,10 +46,10 @@ export class AuthController {
         return { success: true }
     }
 
-    @Post('authUser')
+    @Post('checkAuth')
     @UseGuards(AuthGuard)
-    async authUser(@Req() req: TRequestWithUser) {
-        delete req.user['password']
-        return req.user
+    async authUser(@User() user: TUser) {
+        delete user.password
+        return user
     }
 }

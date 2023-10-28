@@ -15,4 +15,5 @@ model User {
     lastName  String
     birthday  DateTime? @db.Date
     createdAt DateTime  @default(now())
+    username  String?   @unique
 }

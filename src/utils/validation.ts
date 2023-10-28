@@ -15,6 +15,8 @@ const getExceptionMessage = (exception_response: string | object): string => {
             }
 
             return 'Something went wrong in server...'
+        } else {
+            return 'Something went wrong in server...'
         }
     } else {
         return exception_response

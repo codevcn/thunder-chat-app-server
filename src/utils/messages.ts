@@ -3,6 +3,7 @@ export enum EExceptionMessages {
     INCORRECT_EMAIL_PASSWORD = "Incorrect email or password",
     USER_NOT_FOUND = "User not found",
     TOKEN_NOT_FOUND = 'Token not found',
+    AUTHENTICATION_FAIL = 'Authentication fail',
 }
 
 export enum ValidationMessages {

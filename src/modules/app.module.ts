@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { AuthModule } from './auth.module'
 import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt' 
+import { ConversationsModule } from './conversations.module'
 
 @Module({
 	imports: [
@@ -12,8 +13,11 @@ import { JwtModule } from '@nestjs/jwt'
 		JwtModule.register({
 			global: true,
 			secret: process.env.JWT_SECRET,
-			signOptions: { expiresIn: '60s' },
-		})
+			signOptions: {
+				expiresIn: '3h',
+			},
+		}),
+		ConversationsModule,
 	],
 	controllers: [],
 	providers: [],

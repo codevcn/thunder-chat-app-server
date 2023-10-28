@@ -13,17 +13,15 @@ const cookie_options: CookieOptions = {
     secure: true,
 }
 
-const sendJWTByCookie = (
-    {
-        res,
-        token,
-        cookie_otps,
-    }: {
-        res: Response,
-        token: string,
-        cookie_otps?: CookieOptions,
-    }
-): void => {
+const sendJWTByCookie = ({
+    res,
+    token,
+    cookie_otps,
+}: {
+    res: Response,
+    token: string,
+    cookie_otps?: CookieOptions,
+}): void => {
     res.cookie(
         Names.JWT_TOKEN_AUTH,
         token,
@@ -31,22 +29,20 @@ const sendJWTByCookie = (
     )
 }
 
-const removeJWTByCookie = (
-    {
-        res,
-        cookie_otps,
-    }: {
-        res: Response,
-        cookie_otps?: CookieOptions,
-    }
-): void => {
+const removeJWTByCookie = ({
+    res,
+    cookie_otps,
+}: {
+    res: Response,
+    cookie_otps?: CookieOptions,
+}): void => {
     res.clearCookie(
         Names.JWT_TOKEN_AUTH,
         cookie_otps || cookie_options
     )
 }
 
-const setJWTPayload = <T extends TJwtPayload = TJwtPayload>(payload: T): T => {
+const setJWTPayload = (payload: TJwtPayload): TJwtPayload => {
     return payload
 }
 

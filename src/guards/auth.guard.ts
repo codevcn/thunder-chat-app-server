@@ -14,7 +14,7 @@ export class AuthGuard implements CanActivate {
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
         const req = context.switchToHttp().getRequest<Request>()
-        const token = this.extractToken(req) 
+        const token = this.extractToken(req)
 
         if (!token) {
             throw new UnauthorizedException(EExceptionMessages.TOKEN_NOT_FOUND)
@@ -29,16 +29,18 @@ export class AuthGuard implements CanActivate {
                 }
             )
         } catch (error) {
-            throw new UnauthorizedException(EExceptionMessages.TOKEN_NOT_FOUND)
+            throw new UnauthorizedException(EExceptionMessages.AUTHENTICATION_FAIL)
         }
 
         try {
-            req['user'] = await prismaClient.user.findUnique({
+            const user = await prismaClient.user.findUnique({
                 where: {
                     id: payload.user_id,
                     email: payload.email,
                 }
             })
+
+            req['user'] = user
         } catch (error) {
             throw error
         }
