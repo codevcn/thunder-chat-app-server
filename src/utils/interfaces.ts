@@ -1,19 +1,33 @@
 import {
-    TCreateUser, TUser, TLoginUser,
+    TCreateUserParams,
+    TUser,
+    TLoginUserParams,
     TJWTToken,
-    TSearchConversation,
+    TSearchConversationParams,
+    TUserWithProfile,
+    TStartConversationParams,
+    TStartConversationReturn,
+    TFindConversationParams,
+    TFindConversationReturn,
+    TMessage,
 } from "./types"
 
 export interface IUserService {
-    createUser: (createUser: TCreateUser) => Promise<TUser>,
-    getUserByEmail: (email: string) => Promise<TUser>,
+    createUser: (createUser: TCreateUserParams) => Promise<TUser>,
+    getUserByEmail: (email: string) => Promise<TUserWithProfile>,
 }
 
 export interface IAuthService {
-    loginUser: (loginUser: TLoginUser) => Promise<TJWTToken>,
-    registerUser: (createUserData: TCreateUser) => Promise<TJWTToken>,
+    loginUser: (loginUser: TLoginUserParams) => Promise<TJWTToken>,
+    registerUser: (createUserData: TCreateUserParams) => Promise<TJWTToken>,
 }
 
-export interface IConversations {
-    searchConversation: ({ email, username, creatorId }: TSearchConversation) => Promise<TUser>,
+export interface IConversationsService {
+    searchConversation: ({ email, username, creatorId }: TSearchConversationParams) => Promise<TUserWithProfile[]>,
+    startConversation: ({ recipientId, creatorId }: TStartConversationParams) => Promise<TStartConversationReturn>,
+    findConversation: ({ recipientId, creatorId }: TFindConversationParams) => Promise<TFindConversationReturn>,
+}
+
+export interface IMessageService {
+    findMessagesByConversationId: ({ conversationId }: { conversationId: number }) => Promise<TMessage[]>,
 }

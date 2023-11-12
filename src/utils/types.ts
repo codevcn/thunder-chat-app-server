@@ -1,12 +1,24 @@
-import { Prisma } from 'prisma/prisma-client'
 import { Request } from 'express'
+import {
+    User,
+    Profile,
+    Conversation,
+    Message,
+} from '@prisma/client'
 
-const tuser = Prisma.validator<Prisma.UserDefaultArgs>()({})
-export type TUser = Prisma.UserGetPayload<typeof tuser>
+export type TUser = User
+
+export type TProfile = Profile
+
+export type TUserWithProfile = TUser & { Profile: Omit<TProfile, 'id' | 'userId'> }
+
+export type TConversation = Conversation
+
+export type TMessage = Message
 
 export type TRequestWithUser = Request & { user: TUser }
 
-export type TCreateUser = {
+export type TCreateUserParams = {
     email: string
     password: string
     firstName: string
@@ -34,7 +46,7 @@ export type TJWTToken = {
     jwt_token: string,
 }
 
-export type TLoginUser = {
+export type TLoginUserParams = {
     email: string,
     password: string,
 }
@@ -44,8 +56,23 @@ export type TJwtPayload = {
     email: string,
 }
 
-export type TSearchConversation = {
+export type TSearchConversationParams = {
     email?: string,
     username?: string,
-    creatorId: number, 
+    creatorId: number,
+    nameOfUser?: string,
 }
+
+export type TStartConversationParams = {
+    recipientId: number,
+    creatorId: number,
+}
+
+export type TFindConversationParams = TStartConversationParams
+
+export type TStartConversationReturn =
+    TConversation & {
+        recipient: TUserWithProfile,
+    }
+
+export type TFindConversationReturn = TStartConversationReturn

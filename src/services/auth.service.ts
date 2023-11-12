@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { IAuthService } from 'src/utils/interfaces'
-import { TLoginUser, TCreateUser } from 'src/utils/types'
+import { TLoginUserParams, TCreateUserParams } from 'src/utils/types'
 import { EExceptionMessages } from 'src/utils/messages'
 import { compareHashedPassword } from 'src/utils/helpers'
 import { JwtService } from '@nestjs/jwt'
@@ -14,7 +14,7 @@ export class AuthService implements IAuthService {
         private userService: UserService,
     ) { }
 
-    async loginUser({ email, password }: TLoginUser) {
+    async loginUser({ email, password }: TLoginUserParams) {
         const user = await this.userService.getUserByEmail(email)
 
         const isMatch = await compareHashedPassword(password, user.password)
@@ -29,7 +29,7 @@ export class AuthService implements IAuthService {
         }
     }
 
-    async registerUser(createUserData: TCreateUser) {
+    async registerUser(createUserData: TCreateUserParams) {
         const user = await this.userService.createUser(createUserData)
 
         const jwt_payload = setJWTPayload({ email: user.email, user_id: user.id })

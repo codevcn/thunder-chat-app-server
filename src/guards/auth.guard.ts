@@ -1,15 +1,16 @@
 import { Request } from 'express'
-import { Names } from 'src/utils/constants'
+import { Names, ProviderTokens } from 'src/utils/constants'
 import { EExceptionMessages } from 'src/utils/messages'
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common'
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Inject } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { TJwtPayload } from 'src/utils/types'
-import { prismaClient } from 'src/config/prisma'
+import { PrismaService } from '@/services/prisma.service'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(
         private jwtService: JwtService,
+        @Inject(ProviderTokens.PRISMA_CLIENT) private prismaService: PrismaService,
     ) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -33,10 +34,9 @@ export class AuthGuard implements CanActivate {
         }
 
         try {
-            const user = await prismaClient.user.findUnique({
+            const user = await this.prismaService.user.findUnique({
                 where: {
                     id: payload.user_id,
-                    email: payload.email,
                 }
             })
 

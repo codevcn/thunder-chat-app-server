@@ -16,4 +16,55 @@ model User {
     birthday  DateTime? @db.Date
     createdAt DateTime  @default(now())
     username  String?   @unique
+
+    Profile                  Profile?
+    CreatorsOnConversation   Conversation[] @relation("CreatorOnConversation")
+    RecipientsOnConversation Conversation[] @relation("RecipientOnConversation")
+    Messages                 Message[]
+    ReceiverOnFriend         Friend[]       @relation("ReceiverOnFriend")
+    SenderOnFriend           Friend[]       @relation("SenderOnFriend")
+}
+
+model Profile {
+    id        Int      @id @default(autoincrement())
+    about     String?
+    avatar    String?
+    user      User     @relation(fields: [userId], references: [id])
+    userId    Int      @unique
+    createdAt DateTime @default(now())
+}
+
+model Conversation {
+    id            Int      @id @default(autoincrement())
+    creator       User     @relation("CreatorOnConversation", fields: [creatorId], references: [id])
+    creatorId     Int
+    recipient     User     @relation("RecipientOnConversation", fields: [recipientId], references: [id])
+    recipientId   Int
+    createdAt     DateTime @default(now())
+    lastMsgSent   Message? @relation("lastMsgSentOnConv", fields: [lastMsgSentId], references: [id])
+    lastMsgSentId Int?     @unique
+
+    Messages Message[] @relation("MessagesOnMessage")
+
+    @@unique([creatorId, recipientId])
+}
+
+model Message {
+    id             Int          @id @default(autoincrement())
+    content        String
+    createdAt      DateTime     
+    author         User         @relation(fields: [authorId], references: [id])
+    authorId       Int
+    conversation   Conversation @relation("MessagesOnMessage", fields: [conversationId], references: [id])
+    conversationId Int
+
+    LastMsgSentOnConv Conversation? @relation("lastMsgSentOnConv")
+}
+
+model Friend {
+    id         Int  @id @default(autoincrement())
+    receiver   User @relation("ReceiverOnFriend", fields: [receiverId], references: [id])
+    receiverId Int
+    sender     User @relation("SenderOnFriend", fields: [senderId], references: [id])
+    senderId   Int
 }

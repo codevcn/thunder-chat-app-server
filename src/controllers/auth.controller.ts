@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Res, UseGuards } from '@nestjs/common'
+import { Controller, Post, Body, Res, UseGuards, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common'
 import { Routes } from 'src/utils/constants'
 import { LoginUserDto } from 'src/dtos/auth'
 import { CreateUserDto } from 'src/dtos/user'
@@ -6,8 +6,9 @@ import { AuthService } from 'src/services/auth.service'
 import { Response } from 'express'
 import { removeJWTByCookie, sendJWTByCookie } from 'src/utils/jwt'
 import { AuthGuard } from 'src/guards/auth.guard'
-import { TUser } from 'src/utils/types'
-import { User } from 'src/decorators/user.decorator'
+import { User } from '@/decorators/user.decorator'
+import { TUser } from '@/utils/types'
+import { AuthUserEntity } from '@/serialization/auth.entities'
 
 @Controller(Routes.AUTH)
 export class AuthController {
@@ -16,8 +17,8 @@ export class AuthController {
     ) { }
 
     @Post('register')
-    async register(@Body() createUserDto: CreateUserDto, @Res({ passthrough: true }) res: Response) {
-        const { jwt_token } = await this.authService.registerUser(createUserDto)
+    async register(@Body() createUserPayload: CreateUserDto, @Res({ passthrough: true }) res: Response) {
+        const { jwt_token } = await this.authService.registerUser(createUserPayload)
 
         sendJWTByCookie({
             res: res,
@@ -28,8 +29,8 @@ export class AuthController {
     }
 
     @Post('login')
-    async login(@Body() loginUserDto: LoginUserDto, @Res({ passthrough: true }) res: Response) {
-        const { jwt_token } = await this.authService.loginUser(loginUserDto)
+    async login(@Body() loginUserPayload: LoginUserDto, @Res({ passthrough: true }) res: Response) {
+        const { jwt_token } = await this.authService.loginUser(loginUserPayload)
 
         sendJWTByCookie({
             res: res,
@@ -48,8 +49,8 @@ export class AuthController {
 
     @Post('checkAuth')
     @UseGuards(AuthGuard)
-    async authUser(@User() user: TUser) {
-        delete user.password
-        return user
+    @UseInterceptors(ClassSerializerInterceptor)
+    async authUser(@User() user: TUser): Promise<AuthUserEntity> {
+        return new AuthUserEntity(user)
     }
 }

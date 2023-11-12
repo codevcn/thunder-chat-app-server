@@ -5,7 +5,6 @@ import { ValidationPipe } from '@nestjs/common'
 import * as session from 'express-session'
 import connectRedisStore from './config/connectRedisStore'
 import { HttpExceptionFilter } from './filters/globalException.filter'
-import { connectDB } from './config/prisma'
 import * as cookieParser from 'cookie-parser'
 
 const {
@@ -22,6 +21,7 @@ async function bootstrap() {
 	// set api prefix
 	app.setGlobalPrefix('api')
 	
+	// for getting cookie in req
 	app.use(cookieParser())
 
 	// cors
@@ -52,8 +52,6 @@ async function bootstrap() {
 
 	// to be able to use dtos in controllers
 	app.useGlobalPipes(new ValidationPipe())
-
-	connectDB()
 
 	await app.listen(PORT, () => {
 		console.log('>>> Server is working on PORT', PORT)

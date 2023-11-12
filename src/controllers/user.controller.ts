@@ -10,7 +10,7 @@ export class UserController {
     ) { }
 
     @Get('getUserByEmail')
-    async getUserByEmail(@Query() getUserByEmailDto: GetUserByEmailDto) {
-        return await this.userService.getUserByEmail(getUserByEmailDto.email)
+    async getUserByEmail(@Query() getUserByEmailPayload: GetUserByEmailDto) {
+        return await this.userService.getUserByEmail(getUserByEmailPayload.email)
     }
 }
