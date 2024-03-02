@@ -52,7 +52,7 @@ model Conversation {
 model Message {
     id             Int          @id @default(autoincrement())
     content        String
-    createdAt      DateTime     
+    createdAt      DateTime
     author         User         @relation(fields: [authorId], references: [id])
     authorId       Int
     conversation   Conversation @relation("MessagesOnMessage", fields: [conversationId], references: [id])

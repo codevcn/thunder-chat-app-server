@@ -1,33 +1,16 @@
-import {
-    TCreateUserParams,
-    TUser,
-    TLoginUserParams,
-    TJWTToken,
-    TSearchConversationParams,
-    TUserWithProfile,
-    TStartConversationParams,
-    TStartConversationReturn,
-    TFindConversationParams,
-    TFindConversationReturn,
-    TMessage,
-} from "./types"
+import type { NodeEnvironments } from './types'
 
-export interface IUserService {
-    createUser: (createUser: TCreateUserParams) => Promise<TUser>,
-    getUserByEmail: (email: string) => Promise<TUserWithProfile>,
-}
-
-export interface IAuthService {
-    loginUser: (loginUser: TLoginUserParams) => Promise<TJWTToken>,
-    registerUser: (createUserData: TCreateUserParams) => Promise<TJWTToken>,
-}
-
-export interface IConversationsService {
-    searchConversation: ({ email, username, creatorId }: TSearchConversationParams) => Promise<TUserWithProfile[]>,
-    startConversation: ({ recipientId, creatorId }: TStartConversationParams) => Promise<TStartConversationReturn>,
-    findConversation: ({ recipientId, creatorId }: TFindConversationParams) => Promise<TFindConversationReturn>,
-}
-
-export interface IMessageService {
-    findMessagesByConversationId: ({ conversationId }: { conversationId: number }) => Promise<TMessage[]>,
+export interface IProcessEnv {
+    NODE_ENV: NodeEnvironments
+    PORT: number
+    DATABASE_URL: string
+    SESSION_SECRET: string
+    SESSION_NAME: string
+    COOKIE_EXPIRE_IN_HOURS: number
+    JWT_SECRET: string
+    JWT_TOKEN_MAX_AGE_IN_HOUR: number
+    REDIS_CLOUD_DB_PASSWORD: string
+    REDIS_HOST: string
+    CLIENT_DOMAIN_DEV: string
+    CLIENT_HOST_DEV: string
 }

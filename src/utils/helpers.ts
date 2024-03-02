@@ -1,15 +1,25 @@
+import { my_location_src } from '@/test/test'
 import * as bcrypt from 'bcrypt'
 
-const getHashedPassword = async (password: string): Promise<string> => {
-    const salt = await bcrypt.genSalt()
-    return await bcrypt.hash(password, salt)
+export const getHashedPassword = async (password: string): Promise<string> => {
+    return await bcrypt.hash(password, await bcrypt.genSalt())
 }
 
-const compareHashedPassword = async (password: string, encrypted: string): Promise<boolean> => {
+export const compareHashedPassword = async (
+    password: string,
+    encrypted: string
+): Promise<boolean> => {
     return await bcrypt.compare(password, encrypted)
 }
 
-export {
-    getHashedPassword,
-    compareHashedPassword,
+export const convertStringToNumber = (value: string, radix: number = 10) => parseInt(value, radix)
+
+export const logToConsoleWithLocation = (...val: any) => {
+    const print = new Error().stack?.split('\n')[2].trim().split(` (${my_location_src}`)
+    console.log(
+        '>>>',
+        print && print[1] ? print[1].slice(0, print[1].length - 1) : '',
+        '>>>',
+        ...val
+    )
 }
