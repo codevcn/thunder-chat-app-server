@@ -1,0 +1,8 @@
+# Ignore some folders:
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+README.md
+
+# Ignore some files:
