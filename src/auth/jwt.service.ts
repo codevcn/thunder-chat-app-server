@@ -4,18 +4,19 @@ import { JwtService } from '@nestjs/jwt'
 import { EClientCookieNames } from '@/utils/enums'
 import { Injectable } from '@nestjs/common'
 import { IJWTService } from './interfaces'
+import { IProcessEnv } from '@/utils/interfaces'
 
 @Injectable()
 export class JWTService implements IJWTService {
     constructor(
-        private configService: ConfigService,
+        private configService: ConfigService<IProcessEnv>,
         private jwtService: JwtService
     ) {}
 
     getJWTcookieOtps() {
         return {
             maxAge: this.configService.get('JWT_TOKEN_MAX_AGE_IN_HOUR') * 3600000,
-            domain: this.configService.get('CLIENT_DOMAIN'),
+            domain: this.configService.get('CLIENT_DOMAIN_DEV'),
             path: '/',
             httpOnly: true,
             secure: true,

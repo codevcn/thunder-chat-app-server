@@ -17,6 +17,7 @@ export class ConversationController {
         @User() user: TUser,
         @Body() searchConversationPayload: SearchConversationDTO
     ) {
+        console.log('>>> searchConversationPayload >>>', searchConversationPayload)
         const { email, username, nameOfUser } = searchConversationPayload
         if (!email && !username && !nameOfUser) {
             throw new BadRequestException('Query is missing email and username and name')
