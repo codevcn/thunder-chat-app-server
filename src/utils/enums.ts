@@ -22,3 +22,8 @@ export enum ECommonStatuses {
     FAIL = 'fail',
     ERROR = 'error',
 }
+
+export enum EEnvironments {
+    development = 'development',
+    production = 'production',
+}

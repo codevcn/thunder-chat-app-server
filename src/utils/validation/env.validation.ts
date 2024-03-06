@@ -1,15 +1,10 @@
 import { plainToInstance } from 'class-transformer'
 import { IsEnum, IsNumber, IsString, validateSync } from 'class-validator'
-import { IProcessEnv } from '../interfaces'
+import { EEnvironments } from '../enums'
 
-enum NodeEnvironments {
-    Development = 'development',
-    Production = 'production',
-}
-
-class EnvironmentVariables implements IProcessEnv {
-    @IsEnum(NodeEnvironments)
-    NODE_ENV: NodeEnvironments
+class EnvironmentVariables {
+    @IsEnum(EEnvironments)
+    NODE_ENV: EEnvironments
 
     @IsNumber()
     PORT: number
@@ -23,8 +18,8 @@ class EnvironmentVariables implements IProcessEnv {
     @IsString()
     SESSION_NAME: string
 
-    @IsNumber()
-    COOKIE_EXPIRE_IN_HOURS: number
+    @IsString()
+    COOKIE_EXPIRE_IN_HOURS: string
 
     @IsString()
     CLIENT_HOST_DEV: string
@@ -32,8 +27,8 @@ class EnvironmentVariables implements IProcessEnv {
     @IsString()
     JWT_SECRET: string
 
-    @IsNumber()
-    JWT_TOKEN_MAX_AGE_IN_HOUR: number
+    @IsString()
+    JWT_TOKEN_MAX_AGE_IN_HOUR: string
 
     @IsString()
     REDIS_CLOUD_DB_PASSWORD: string

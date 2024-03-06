@@ -2,7 +2,7 @@ import { IsEmail, IsISO8601, IsNotEmpty, MinLength } from 'class-validator'
 import { ELengths } from '@/utils/enums'
 import { EValidationMessages } from 'src/utils/messages'
 
-export class CreateUserDto {
+export class CreateUserDTO {
     @IsNotEmpty()
     @IsEmail()
     email: string
@@ -21,7 +21,7 @@ export class CreateUserDto {
     birthday: Date
 }
 
-export class GetUserByEmailDto {
+export class GetUserByEmailDTO {
     @IsEmail()
     email: string
 }

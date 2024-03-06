@@ -6,10 +6,11 @@ import type { TUser } from '@/utils/entities/user.entity'
 import { BadRequestException, Body, Controller, Post, Get, UseGuards, Param } from '@nestjs/common'
 import { ERoutes } from '@/utils/enums'
 import { convertStringToNumber } from '@/utils/helpers'
+import { IConversationsController } from './interfaces'
 
 @Controller(ERoutes.CONVERSATIONS)
 @UseGuards(AuthGuard)
-export class ConversationController {
+export class ConversationController implements IConversationsController {
     constructor(private conversationService: ConversationService) {}
 
     @Post('search')
@@ -17,7 +18,6 @@ export class ConversationController {
         @User() user: TUser,
         @Body() searchConversationPayload: SearchConversationDTO
     ) {
-        console.log('>>> searchConversationPayload >>>', searchConversationPayload)
         const { email, username, nameOfUser } = searchConversationPayload
         if (!email && !username && !nameOfUser) {
             throw new BadRequestException('Query is missing email and username and name')

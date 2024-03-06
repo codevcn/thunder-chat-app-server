@@ -1,16 +1,4 @@
 import { my_location_src } from '@/test/test'
-import * as bcrypt from 'bcrypt'
-
-export const getHashedPassword = async (password: string): Promise<string> => {
-    return await bcrypt.hash(password, await bcrypt.genSalt())
-}
-
-export const compareHashedPassword = async (
-    password: string,
-    encrypted: string
-): Promise<boolean> => {
-    return await bcrypt.compare(password, encrypted)
-}
 
 export const convertStringToNumber = (value: string, radix: number = 10) => parseInt(value, radix)
 

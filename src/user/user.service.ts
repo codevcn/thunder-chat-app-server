@@ -1,18 +1,25 @@
 import { Injectable, ConflictException, NotFoundException, Inject } from '@nestjs/common'
 import type { IUserService } from './interfaces'
-import type { TCreateUserParams } from 'src/utils/types'
-import { getHashedPassword } from 'src/utils/helpers'
+import type { TCreateUserParams } from './types'
 import { EAuthMessages } from 'src/utils/messages'
 import { PrismaService } from '../utils/ORM/prisma.service'
 import { EProviderTokens } from '@/utils/enums'
 import { JWTService } from '@/auth/jwt.service'
+import { CredentialService } from '@/auth/credential.service'
 
 @Injectable()
 export class UserService implements IUserService {
     constructor(
         @Inject(EProviderTokens.PRISMA_CLIENT) private prismaService: PrismaService,
-        private jwtService: JWTService
+        private jwtService: JWTService,
+        private credentialService: CredentialService
     ) {}
+
+    async findById(id: number) {
+        return await this.prismaService.user.findUnique({
+            where: { id },
+        })
+    }
 
     async registerUser(createUserData: TCreateUserParams) {
         const user = await this.createUser(createUserData)
@@ -21,7 +28,7 @@ export class UserService implements IUserService {
     }
 
     async createUser({ email, firstName, lastName, birthday, password }: TCreateUserParams) {
-        const hashedPassword = await getHashedPassword(password)
+        const hashedPassword = await this.credentialService.getHashedPassword(password)
         const exist_user = await this.prismaService.user.findUnique({
             where: { email },
         })
@@ -29,7 +36,7 @@ export class UserService implements IUserService {
             throw new ConflictException(EAuthMessages.USER_EXISTED)
         }
 
-        const new_user = await this.prismaService.user.create({
+        return await this.prismaService.user.create({
             data: {
                 email: email,
                 firstName: firstName,
@@ -38,8 +45,6 @@ export class UserService implements IUserService {
                 birthday: birthday,
             },
         })
-
-        return new_user
     }
 
     async getUserByEmail(email: string) {

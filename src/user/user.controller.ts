@@ -1,12 +1,13 @@
 import { Body, Controller, Get, Post, Query, Res } from '@nestjs/common'
-import { CreateUserDto, GetUserByEmailDto } from '@/user/user.dto'
+import { CreateUserDTO, GetUserByEmailDTO } from '@/user/user.dto'
 import { UserService } from '@/user/user.service'
 import { ERoutes } from '@/utils/enums'
 import { JWTService } from '@/auth/jwt.service'
 import type { Response } from 'express'
+import { IUserController } from './interfaces'
 
 @Controller(ERoutes.USER)
-export class UserController {
+export class UserController implements IUserController {
     constructor(
         private userService: UserService,
         private jwtService: JWTService
@@ -14,13 +15,13 @@ export class UserController {
 
     @Post('register')
     async register(
-        @Body() createUserPayload: CreateUserDto,
+        @Body() createUserPayload: CreateUserDTO,
         @Res({ passthrough: true }) res: Response
     ) {
         const { jwt_token } = await this.userService.registerUser(createUserPayload)
 
         this.jwtService.sendJWT({
-            res,
+            response: res,
             token: jwt_token,
         })
 
@@ -28,7 +29,7 @@ export class UserController {
     }
 
     @Get('getUserByEmail')
-    async getUserByEmail(@Query() getUserByEmailPayload: GetUserByEmailDto) {
+    async getUserByEmail(@Query() getUserByEmailPayload: GetUserByEmailDTO) {
         return await this.userService.getUserByEmail(getUserByEmailPayload.email)
     }
 }

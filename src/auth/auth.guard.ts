@@ -1,25 +1,16 @@
 import { Request } from 'express'
-import { EClientCookieNames, EProviderTokens } from '@/utils/enums'
+import { EClientCookieNames } from '@/utils/enums'
 import { EAuthMessages } from 'src/utils/messages'
-import {
-    Injectable,
-    CanActivate,
-    ExecutionContext,
-    UnauthorizedException,
-    Inject,
-} from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import type { TJWTPayload } from 'src/utils/types'
-import { PrismaService } from '@/utils/ORM/prisma.service'
-import { ConfigService } from '@nestjs/config'
-import type { IProcessEnv } from '@/utils/interfaces'
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException } from '@nestjs/common'
+import type { TJWTPayload } from './types'
+import { JWTService } from './jwt.service'
+import { UserService } from '@/user/user.service'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
     constructor(
-        private jwtService: JwtService,
-        @Inject(EProviderTokens.PRISMA_CLIENT) private prismaService: PrismaService,
-        private configService: ConfigService<IProcessEnv>
+        private jwtService: JWTService,
+        private userService: UserService
     ) {}
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -32,19 +23,13 @@ export class AuthGuard implements CanActivate {
 
         let payload: TJWTPayload
         try {
-            payload = await this.jwtService.verifyAsync(token, {
-                secret: this.configService.get('JWT_SECRET'),
-            })
+            payload = await this.jwtService.verifyToken(token)
         } catch (error) {
             throw new UnauthorizedException(EAuthMessages.AUTHENTICATION_FAIL)
         }
 
         try {
-            const user = await this.prismaService.user.findUnique({
-                where: {
-                    id: payload.user_id,
-                },
-            })
+            const user = await this.userService.findById(payload.user_id)
 
             req['user'] = user
         } catch (error) {

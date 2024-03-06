@@ -2,9 +2,10 @@ import { MessageService } from '@/message/messages.service'
 import { ERoutes } from '@/utils/enums'
 import { convertStringToNumber } from '@/utils/helpers'
 import { Controller, Get, Param } from '@nestjs/common'
+import { IMessageController } from './interfaces'
 
 @Controller(ERoutes.MESSAGE)
-export class MessageController {
+export class MessageController implements IMessageController {
     constructor(private messageService: MessageService) {}
 
     @Get('messages/:conversationId')

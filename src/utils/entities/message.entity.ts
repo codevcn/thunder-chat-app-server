@@ -1,3 +1,3 @@
-import type { User, Message } from '@prisma/client'
+import type { Message } from '@prisma/client'
 
 export type TMessage = Message

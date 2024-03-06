@@ -1,4 +1,4 @@
-import { AuthUserEntity } from '@/auth/auth.serialization'
+import { CheckAuthEntity } from '@/auth/auth.serialization'
 import { PrismaService } from '@/utils/ORM/prisma.service'
 import { Controller, Post, Body, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common'
 
@@ -12,7 +12,7 @@ export class TestController {
 
     @UseInterceptors(ClassSerializerInterceptor)
     @Post()
-    async testing(@Body() body: TBody): Promise<AuthUserEntity | null> {
+    async testing(@Body() body: TBody): Promise<CheckAuthEntity | null> {
         const user = await this.prismaService.user.findFirst({
             include: {
                 Profile: true,
@@ -20,7 +20,7 @@ export class TestController {
         })
         console.log('>>> user >>>', user)
         if (user) {
-            const user_data = new AuthUserEntity(user)
+            const user_data = new CheckAuthEntity(user)
             console.log('>>> user_data >>>', user_data)
             return user_data
         }

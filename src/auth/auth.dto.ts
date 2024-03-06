@@ -1,12 +1,9 @@
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator'
-import { ELengths } from '@/utils/enums'
+import { IsNotEmpty } from 'class-validator'
 
-export class LoginUserDto {
-    @IsEmail()
+export class LoginUserDTO {
     @IsNotEmpty()
     email: string
 
     @IsNotEmpty()
-    @MinLength(ELengths.PASSWORD_MIN_LEN)
     password: string
 }

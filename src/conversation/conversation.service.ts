@@ -1,5 +1,9 @@
 import { IConversationsService } from './interfaces'
-import type { TStartConversationParams, TSearchConversationParams } from '@/utils/types'
+import type {
+    TStartConversationParams,
+    TSearchConversationParams,
+    TFindConversationParams,
+} from './types'
 import { Inject, Injectable } from '@nestjs/common'
 import { PrismaService } from '@/utils/ORM/prisma.service'
 import { EProviderTokens } from '@/utils/enums'
@@ -42,7 +46,7 @@ export class ConversationService implements IConversationsService {
         return user
     }
 
-    async findConversation({ recipientId, creatorId }: TStartConversationParams) {
+    async findConversation({ recipientId, creatorId }: TFindConversationParams) {
         return await this.prismaService.conversation.findFirst({
             where: {
                 creatorId,

@@ -8,7 +8,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
             await this.$connect()
             console.log('>>> Connect DB successfully')
         } catch (error) {
-            console.log('>>> DB connecting error >>>', error)
+            console.log('>>> DB connection error >>>', error)
         }
     }
 }

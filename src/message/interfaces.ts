@@ -7,3 +7,7 @@ export interface IMessageService {
         conversationId: number
     }) => Promise<TMessage[]>
 }
+
+export interface IMessageController {
+    fetchMessages: (conversationId: string) => Promise<TMessage[]>
+}
